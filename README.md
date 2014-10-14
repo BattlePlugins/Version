@@ -41,7 +41,7 @@ public class SomePlugin extends JavaPlugin {
         if (!server.isSupported(MAX) || !server.isCompatible(MIN)) {
             getLogger().info("This plugin is not compatible with your server.");
             getLogger().info("The maximum supported version is " + MAX);
-            getLogger().info("The minimum capatible version is " + MIN);
+            getLogger().info("The minimum compatible version is " + MIN);
             Bukkit.getServer().getPluginManager().disablePlugin(this);
             return;
         }
