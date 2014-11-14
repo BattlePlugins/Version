@@ -1,6 +1,7 @@
 package mc.euro.version;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -14,8 +15,8 @@ public class VersionFactory {
      */
     public static Version getPluginVersion(Plugin plugin) {
         String version = (plugin == null) ? null : plugin.getDescription().getVersion();
-        Tester tester = TesterFactory.getNewTester(plugin);
-        return new Version(version, tester, plugin);
+        Tester<Plugin> tester = TesterFactory.getNewTester(plugin);
+        return new Version<Plugin>(version, tester, plugin);
     }
     
     /**
@@ -24,8 +25,8 @@ public class VersionFactory {
     public static Version getPluginVersion(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
         String version = (plugin == null) ? null : plugin.getDescription().getVersion();
-        Tester tester = TesterFactory.getNewTester(plugin);
-        return new Version(version, tester, plugin);
+        Tester<Plugin> tester = TesterFactory.getNewTester(plugin);
+        return new Version<Plugin>(version, tester, plugin);
     }
     
     /**

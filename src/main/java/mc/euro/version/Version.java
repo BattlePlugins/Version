@@ -14,14 +14,14 @@ import java.util.regex.Pattern;
  * 
  * @author Europia79, BigTeddy98, Tux2, DSH105
  */
-public class Version implements Comparable<Version> {
+public class Version<T> implements Comparable<Version> {
     
     /**
      * The Predicate tester preforms the job of checking if the plugin isEnabled(). <br/><br/>
      * 
      * Because, if the plugin is disabled, then our compatibility check should fail.
      */
-    Tester tester;
+    Tester<T> tester;
     Object object;
     final String version;
     String separator = "[_.-]";
@@ -49,7 +49,7 @@ public class Version implements Comparable<Version> {
     }
     
     public boolean isEnabled() {
-        return tester.isEnabled(object);
+        return tester.isEnabled((T) object);
     }
     
     /**
