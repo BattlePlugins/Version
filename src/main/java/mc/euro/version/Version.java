@@ -78,12 +78,44 @@ public class Version<T> implements Comparable<Version> {
         return false;
     }
     
+    /**
+     * Unlike isCompatible(), this method returns false if the versions are equal.
+     * @param whichVersion
+     * @return Return true, if the currently running/installed version is greater than whichVersion.
+     */
+    public boolean isGreaterThan(String whichVersion) {
+        if (!this.isEnabled()) return false;
+        int x = compareTo(whichVersion);
+        if (x > 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Unlike isSupported(), this method returns false if the versions are equal.
+     * @param whichVersion
+     * @return Return true, if the currently running/installed version is less than whichVersion.
+     */
+    public boolean isLessThan(String whichVersion) {
+        if (!this.isEnabled()) return false;
+        int x = compareTo(whichVersion);
+        if (x < 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    public int compareTo(String whichVersion) {
+        return compareTo(new Version(whichVersion));
+    }
+    
     @Override
     public int compareTo(Version whichVersion) {
         int[] currentVersion = parseVersion(this.version);
         int[] otherVersion = parseVersion(whichVersion.toString());
         int length = (currentVersion.length >= otherVersion.length) ? currentVersion.length : otherVersion.length;
-        for (int index = 0; index <= (length - 1); index = index + 1) {
+        for (int index = 0; index < length; index = index + 1) {
             try {
                 if (currentVersion[index] != otherVersion[index]) {
                     return currentVersion[index] - otherVersion[index];
