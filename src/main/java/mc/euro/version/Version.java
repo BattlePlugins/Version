@@ -93,6 +93,15 @@ public class Version<T> implements Comparable<Version> {
     }
     
     /**
+     * Alias for isCompatible().
+     * @param minVersion
+     * @return Return true, if this version object is greater than or equal to the parameter, minVersion.
+     */
+    public boolean isGreaterThanOrEqualTo(String minVersion) {
+        return isCompatible(minVersion);
+    }
+    
+    /**
      * Unlike isSupported(), this method returns false if the versions are equal.
      * @param whichVersion
      * @return Return true, if the currently running/installed version is less than whichVersion.
@@ -106,6 +115,20 @@ public class Version<T> implements Comparable<Version> {
         return false;
     }
     
+    /**
+     * Alias for isSupported().
+     * @param maxVersion
+     * @return Return true, if this version object is less than or equal to the parameter, maxVersion.
+     */
+    public boolean isLessThanOrEqualTo(String maxVersion) {
+        return isSupported(maxVersion);
+    }
+    
+    /**
+     * Returns Negative, Zero, or Positive if this version is less than, equal to, or greater than the parameter.
+     * @param whichVersion
+     * @return Negative, Zero, or Positive as this object is less than, equal to, or greater than the parameter.
+     */
     public int compareTo(String whichVersion) {
         return compareTo(new Version(whichVersion));
     }
