@@ -43,8 +43,8 @@ public class VersionFactory {
      * This should only be used to reliably access your own .compat. packages.
      * Really, the return value never should have been a Version object
      * because it just gets immediately converted to a String anyways.
-     * @return - "pre" if the server is less than v1.4.5, otherwise returns "vX_Y_Z"
-     * @deprecated - Scheduled for deletion in favor of getNmsPackage() + getCompatPackage().
+     * @return - "vX_Y_Z". No longer returns "pre" for really old versions of Minecraft.
+     * @deprecated - in favor of getNmsPackage() + getCompatPackage().
      */
     @Deprecated
     public static Version getNmsVersion() {
@@ -54,14 +54,6 @@ public class VersionFactory {
                 NMS = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
             } catch (ArrayIndexOutOfBoundsException ex) {
                 NMS = createCompatPackage();
-                // Do what I say, not what I do :P
-                // 1.4.5+ should never reach this point, thus comparison is safe here.
-                // This adds backwards compatibility while future proofing
-                // against possible changes in Spigot.
-                // Note that comparison of 1.4.7 (v1_4_R1) to 1.4.6 (v1_4_6) would normally fail.
-                if (new Version(NMS).compareTo("1.4.5") < 0) {
-                    return new Version("pre");
-                }
             }
         return new Version(NMS);
     }
@@ -72,7 +64,7 @@ public class VersionFactory {
      * the server version that's running.
      * @return a String in the form of "vX_Y_Z" where "v" is constant and X, Y, & Z are integers.
      */
-    private static String getNmsPackage() {
+    public static String getNmsPackage() {
         return getNmsVersion().toString();
     }
     
@@ -86,7 +78,7 @@ public class VersionFactory {
      * Also, it may not exist in future versions of Spigot.
      * @return a String in the form of "vX_Y_Z" where "v" is constant and X, Y, & Z are integers.
      */
-    private static String getCompatPackage() {
+    public static String getCompatPackage() {
         return createCompatPackage();
     }
     
