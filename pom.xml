@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>mc.euro</groupId>
     <artifactId>Version</artifactId>
-    <version>2.0.1</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,12 +12,19 @@
     </properties>
     <repositories>
         <repository>
-            <id>rainbowcraft-repo</id>
-            <url>http://rainbowcraft.sytes.net/maven/repository/</url>
-        </repository>
-        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>sponge-maven-repo</id>
+            <name>Sponge maven repo</name>
+            <url>http://repo.spongepowered.org/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <dependencies>
@@ -26,6 +33,27 @@
             <artifactId>bukkit</artifactId>
             <version>1.7.2-R0.3</version>
             <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>2.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>sponge</artifactId>
+            <version>1.8-1371-2.1DEV-476</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spongepowered</groupId>
+                    <artifactId>spongecommon</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -70,12 +98,6 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>rainbowcraft-repo</id>
-            <url>scp://23.29.127.102/var/www/maven/repository</url>
-        </repository>
-    </distributionManagement>
 </project>
 <!-- If you use this module, then include the follow to shade it into your final JAR:
         <build>
