@@ -14,14 +14,17 @@ The API:
   * @return Return true, if the currently running/installed version is less than or equal to maxVersion.
 - constructor Version(String version)
   * @param version - This is the version that is running on the server.
-- constructor Version(String version, Tester tester, Object object)
+- constructor Version(String version, Tester tester)
   * @param tester - This is an optional interface that you can pass in.
-  * tester.isEnabled() will run before isCompatible() & isSupported()
-    * tester.isEnabled() must return true or else isCompatible() & isSupported() will return false.
-  * This test() can be any custom test that you want to perform.
+  * tester.test() will execute before isCompatible() & isSupported()
+    * tester.test() must return true or else isCompatible() & isSupported() will return false.
     * true = continue the version checking.
     * false = stop the version checking and return false.
-  * @param object - The object to be tested by the tester.
+  * tester.test() can be any custom test that you want to perform.
+    * For example, you can wrap plugin.isEnabled()
+    * Or, you can attach an test to see if the plugin is in a broken state: Most likely from an Exception during onEnable()
+    * Or, anything else your heart desires :P
+    
      
 
    
@@ -33,11 +36,11 @@ public class SomePlugin extends JavaPlugin {
     private Version server;
     public static final String MAX = "1.7.10-R9.9-SNAPSHOT";
     public static final String MIN = "1.2.5";
-    public static final String NMS = VersionFactory.getNmsVersion().toString();
+    public static final String NMS = VersionFactory.getNmsPackage();
 
     @Override
     public void onEnable() {
-        server = VersionFactory.getServerVersion();
+        server = VersionFactory.getMinecraftVersion();
         if (!server.isSupported(MAX) || !server.isCompatible(MIN)) {
             getLogger().info("This plugin is not compatible with your server.");
             getLogger().info("The maximum supported version is " + MAX);
@@ -73,11 +76,13 @@ public class SomePlugin extends JavaPlugin {
 Maven Repository:
 ---
 
-[http://rainbowcraft.sytes.net/maven/repository/] (http://rainbowcraft.sytes.net/maven/repository/ "Maven Repository")
+~~[http://rainbowcraft.sytes.net/maven/repository/] (http://rainbowcraft.sytes.net/maven/repository/ "Maven Repository")~~
 
 If you use maven, put these declarations in your pom.xml:
 
-**repositories section:**
+~~**repositories section:**~~
+
+Unfortunately, I have removed this repository. So you will have to install the project to your local ```.m2/repository```
 
 ```xml
 <repository>
@@ -86,13 +91,43 @@ If you use maven, put these declarations in your pom.xml:
 </repository>
 ```
 
+**Installation to your local .m2/repository**
+
+***git latest version:***
+
+* ```git clone https://github.com/Europia79/Version.git```
+* ```git clean install```
+
+***git previous versions:***
+* ```git clone https://github.com/Europia79/Version.git```
+* ```git log --format=oneline```
+* ```git checkout <hash>```
+* ```git clean install```
+* ```git checkout master```
+
+***ci file download & mvn install:***
+
+* ~~[http://ci.battleplugins.com/job/Version/](http://ci.battleplugins.com/job/Version/ "Version downloads")~~
+* Or, you can download a jar and run the ```mvn install:install-file``` command.
+* This is also helpful to install any dependencies that maven can't automatically download.
+  * Arguments: 
+    * ```-Dfile=``` : The name & location of the jar
+    * ```-DgroupId=``` : Mine is ```mc.euro```
+    * ```-DartifactId=``` : If you decompile or unzip the jar, then you can find this & other information inside the folder ```META-INF/maven/{groupId}.{artifactId}/pom.properties``` & ```pom.xml```
+    * ```-Dversion``` : Also found in ```pom.properties``` & ```pom.xml```
+    * ```Dpackaging=jar```
+    * ```DcreateChecksum=true```
+  * Example: ```mvn install:install-file -Dfile="C:\Users\Nikolai\Documents\lib\version\2.0.1\Version.jar" -DgroupId=mc.euro -DartifactId=Version -Dversion=2.0.1 -Dpackaging=jar -DcreateChecksum=true```
+
 **dependencies section:**
+
+I recommend using ```2.0.1``` or ```3.0.0-SNAPSHOT```
 
 ```xml
 <dependency>
     <groupId>mc.euro</groupId>
     <artifactId>Version</artifactId>
-    <version>1.0</version>
+    <version>2.0.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -139,10 +174,12 @@ Dependencies:
 - **Bukkit API**
   * https://github.com/Bukkit/Bukkit
   * http://dl.bukkit.org/downloads/bukkit/
-  * VersionFactory provides an easy way to construct Version objects for Bukkit plugins and therefore requires Bukkit.jar to compile.
+  * Required in order to power Platform.BUKKIT
 - **Sponge API**
-  * http://spongepowered.org/
-  * Possible Future dependency
+  * https://repo.spongepowered.org/maven/org/spongepowered/spongeapi/
+- **Sponge server**
+  * https://repo.spongepowered.org/maven/org/spongepowered/sponge/
+  * Required in order to power Platform.SPONGE
 
 
 Contact:
@@ -159,4 +196,6 @@ Nicodemis79 on Skype
 Javadocs
 ---
 
-[http://rainbowcraft.sytes.net:8080/job/Version/javadoc](http://rainbowcraft.sytes.net:8080/job/Version/javadoc "javadocs")
+~~[http://ci.battleplugins.com/job/Version/javadoc](http://ci.battleplugins.com/job/Version/javadoc "javadocs")~~
+
+~~[http://rainbowcraft.sytes.net:8080/job/Version/javadoc](http://rainbowcraft.sytes.net:8080/job/Version/javadoc "javadocs")~~
