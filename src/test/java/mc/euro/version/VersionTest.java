@@ -99,38 +99,38 @@ public class VersionTest extends TestCase
     
     public void testCompareTo() {
         System.out.println("compareTo");
-        Version whichVersion = new Version("1.3.6-b122");
         Version instance = new Version("1.3.6-b122");
+        Version whichVersion = new Version("1.3.6-b122");
         int expected = 0;
         int result = instance.compareTo(whichVersion);
         assertEquals(expected, result);
         
-        whichVersion = new Version("1.3.6-b121-SNAPSHOT");
         instance = new Version("1.3.6-b122");
+        whichVersion = new Version("1.3.6-b121-SNAPSHOT");
         expected = 1;
         result = instance.compareTo(whichVersion);
         assertEquals(expected, result);
         
-        whichVersion = new Version("1.3.6-b123");
         instance = new Version("1.3.6-b122");
+        whichVersion = new Version("1.3.6-b123");
         expected = -1;
         result = instance.compareTo(whichVersion);
         assertEquals(expected, result);
         
-        whichVersion = new Version("1.9");
         instance = new Version("1.5");
+        whichVersion = new Version("1.9");
         expected = -4;
         result = instance.compareTo(whichVersion);
         assertEquals(expected, result);
         
-        whichVersion = new Version("1.5");
         instance = new Version("1.9");
+        whichVersion = new Version("1.5");
         expected = 4;
         result = instance.compareTo(whichVersion);
         assertEquals(expected, result);
         
-        whichVersion = new Version("1.2.0");
         instance = new Version("1.2");
+        whichVersion = new Version("1.2.0");
         result = instance.compareTo(whichVersion);
         expected = 0;
         assertEquals(expected, result);
