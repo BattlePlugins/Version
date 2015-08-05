@@ -134,6 +134,12 @@ public class VersionTest extends TestCase
         result = instance.compareTo(whichVersion);
         expected = 0;
         assertEquals(expected, result);
+        
+        instance = new Version("3.0.0.0.2");
+        whichVersion = new Version("3.0");
+        result = instance.compareTo(whichVersion);
+        expected = 2;
+        assertEquals(expected, result);
     }
     
 
