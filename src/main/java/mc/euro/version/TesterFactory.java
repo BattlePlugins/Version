@@ -1,42 +1,47 @@
 package mc.euro.version;
 
-import org.bukkit.plugin.Plugin;
+import mc.euro.version.plugin.IPlugin;
 
 /**
- * Provides less typing for the construction of Plugin Testers. <br/><br/>
+ * Provides for easy construction of IPlugin Testers. <br/><br/>
  * 
  * @author Nikolai
  */
 public class TesterFactory {
     
-    public static Tester getNewTester(Plugin plugin) {
-        if (plugin == null) {
-            return new Tester<Plugin>() {
+    public static Tester<IPlugin> getNewTester(IPlugin iplugin) {
 
-                @Override
-                public boolean isEnabled(Plugin t) {
-                    return false;
-                }
-            };
-        } else {
-            return new Tester<Plugin>() {
-
-                @Override
-                public boolean isEnabled(Plugin t) {
-                    return t.isEnabled();
-                }
-            };
+        if (iplugin == null) {
+            return getShortCircuitTester();
         }
-    }
-
-    public static Tester getDefaultTester() {
-        return new Tester() {
+        
+        Predicate predicate = new Predicate<IPlugin>() {
 
             @Override
-            public boolean isEnabled(Object t) {
-                return true;
+            public boolean test(IPlugin t) {
+                return t.isEnabled();
             }
         };
+
+        return new Tester(predicate, iplugin);
+    }
+
+    /**
+     * The default Tester always succeeds (returns true).
+     * 
+     * @return A new Tester object where its test() method always returns true.
+     */
+    public static Tester getDefaultTester() {
+        return new Tester(Predicate.TRUE, null);
+    }
+    
+    /**
+     * The ShortCircuit Tester always fails (returns false).
+     * 
+     * @return A new Tester object where its test() method always returns false;
+     */
+    public static Tester getShortCircuitTester() {
+        return new Tester(Predicate.FALSE, null);
     }
     
 }
