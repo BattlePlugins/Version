@@ -21,8 +21,7 @@ public class Version<T> implements Comparable<Version> {
      * 
      * Because, if the plugin is disabled, then our compatibility check should fail.
      */
-    Tester<T> tester;
-    Object object;
+    final Tester<T> tester;
     final String version;
     String separator = "[_.-]";
     
@@ -33,23 +32,20 @@ public class Version<T> implements Comparable<Version> {
     public Version(String version) {
         this.version = version;
         this.tester = TesterFactory.getDefaultTester();
-        this.object = new Object();
     }
     
     /**
      * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsVersion() available for convenience. <br/>
      * @param version The version of the plugin, server, or application that is currently running in the JVM. <br/>
-     * @param tester isCompatible() & isSupported() will ask the tester if the object isEnabled() before proceeding. <br/>
-     * @param object The object to be tested. <br/>
+     * @param tester isCompatible() & isSupported() will ask the tester if the "plugin" isEnabled() before proceeding. <br/>
      */
-    public Version(String version, Tester tester, Object object) {
+    public Version(String version, Tester<T> tester) {
         this.version = version;
         this.tester = tester;
-        this.object = object;
     }
     
     public boolean isEnabled() {
-        return tester.isEnabled((T) object);
+        return tester.test();
     }
     
     /**
@@ -154,8 +150,9 @@ public class Version<T> implements Comparable<Version> {
      * 
      * [1] [2] [3] [4] [567]
      */
-    private int[] parseVersion(String version) {
-        String[] stringArray = version.split(separator);
+    private int[] parseVersion(String versionParam) {
+        versionParam = (versionParam == null) ? "" : versionParam;
+        String[] stringArray = versionParam.split(separator);
         int[] temp = new int[stringArray.length];
         for (int index = 0; index <= (stringArray.length - 1); index = index + 1) {
             String t = stringArray[index].replaceAll("\\D", "");
