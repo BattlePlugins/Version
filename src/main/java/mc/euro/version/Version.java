@@ -139,16 +139,11 @@ public class Version<T> implements Comparable<Version> {
         int[] otherVersion = parseVersion(whichVersion.toString());
         int length = (currentVersion.length >= otherVersion.length) ? currentVersion.length : otherVersion.length;
         for (int index = 0; index < length; index = index + 1) {
-            try {
-                if (currentVersion[index] != otherVersion[index]) {
-                    return currentVersion[index] - otherVersion[index];
-                }
-            } catch (IndexOutOfBoundsException ex) {
-                if (currentVersion.length > otherVersion.length) {
-                    return currentVersion[index] - 0;
-                } else if (currentVersion.length < otherVersion.length) {
-                    return 0 - otherVersion[index];
-                }
+            int self = (index < currentVersion.length) ? currentVersion[index] : 0;
+            int other = (index < otherVersion.length) ? otherVersion[index] : 0;
+            
+            if (self != other) {
+                return self - other;
             }
         }
         return 0;
