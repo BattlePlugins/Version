@@ -1,7 +1,6 @@
 package mc.euro.version;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -14,7 +13,7 @@ public class VersionFactory {
      * Factory method used when you want to construct a Version object via a Plugin object. <br/>
      */
     public static Version getPluginVersion(Plugin plugin) {
-        String version = (plugin == null) ? null : plugin.getDescription().getVersion();
+        String version = (plugin == null) ? "" : plugin.getDescription().getVersion();
         Tester<Plugin> tester = TesterFactory.getNewTester(plugin);
         return new Version<Plugin>(version, tester, plugin);
     }
@@ -24,7 +23,7 @@ public class VersionFactory {
      */
     public static Version getPluginVersion(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-        String version = (plugin == null) ? null : plugin.getDescription().getVersion();
+        String version = (plugin == null) ? "" : plugin.getDescription().getVersion();
         Tester<Plugin> tester = TesterFactory.getNewTester(plugin);
         return new Version<Plugin>(version, tester, plugin);
     }
