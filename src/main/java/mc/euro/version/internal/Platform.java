@@ -45,7 +45,7 @@ public abstract class Platform {
         } catch (ClassNotFoundException ignored) {
         }
         try {
-            Class.forName("org.spongepowered.api.Game");
+            Class.forName("org.spongepowered.common.Sponge");
             return Platform.SPONGE;
         } catch (ClassNotFoundException ignored) {
         }
