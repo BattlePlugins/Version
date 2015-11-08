@@ -49,29 +49,21 @@ public class Version<T> implements Comparable<Version> {
     }
     
     /**
+     * Alias for isGreaterThanOrEqualTo().
      * @param minVersion - The absolute minimum version that's required to achieve compatibility.
      * @return Return true, if the currently running/installed version is greater than or equal to minVersion.
      */
     public boolean isCompatible(String minVersion) {
-        if (!this.isEnabled()) return false;
-        int x = compareTo(new Version(minVersion));
-        if (x >= 0) {
-            return true;
-        } 
-        return false;
+        return isGreaterThanOrEqualTo(minVersion);
     }
     
     /**
+     * Alias for isLessThanOrEqualTo().
      * @param maxVersion - The absolute maximum version that's supported.
      * @return Return true, if the currently running/installed version is less than or equal to maxVersion.
      */
     public boolean isSupported(String maxVersion) {
-        if (!this.isEnabled()) return false;
-        int x = compareTo(new Version(maxVersion));
-        if (x <= 0) {
-            return true;
-        }
-        return false;
+        return isLessThanOrEqualTo(maxVersion);
     }
     
     /**
@@ -94,7 +86,12 @@ public class Version<T> implements Comparable<Version> {
      * @return Return true, if this version object is greater than or equal to the parameter, minVersion.
      */
     public boolean isGreaterThanOrEqualTo(String minVersion) {
-        return isCompatible(minVersion);
+        if (!this.isEnabled()) return false;
+        int x = compareTo(new Version(minVersion));
+        if (x >= 0) {
+            return true;
+        } 
+        return false;
     }
     
     /**
@@ -117,7 +114,12 @@ public class Version<T> implements Comparable<Version> {
      * @return Return true, if this version object is less than or equal to the parameter, maxVersion.
      */
     public boolean isLessThanOrEqualTo(String maxVersion) {
-        return isSupported(maxVersion);
+        if (!this.isEnabled()) return false;
+        int x = compareTo(new Version(maxVersion));
+        if (x <= 0) {
+            return true;
+        }
+        return false;
     }
     
     /**
