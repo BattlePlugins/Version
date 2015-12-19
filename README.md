@@ -96,13 +96,13 @@ Unfortunately, I have removed this repository. So you will have to install the p
 ***git latest version:***
 
 * ```git clone https://github.com/Europia79/Version.git```
-* ```git clean install```
+* ```mvn clean install```
 
 ***git previous versions:***
 * ```git clone https://github.com/Europia79/Version.git```
 * ```git log --format=oneline```
 * ```git checkout <hash>```
-* ```git clean install```
+* ```mvn clean install```
 * ```git checkout master```
 
 ***ci file download & mvn install:***
