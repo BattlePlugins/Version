@@ -1,6 +1,6 @@
 package mc.euro.version.internal;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 import mc.euro.version.Tester;
 import mc.euro.version.TesterFactory;
@@ -131,13 +131,13 @@ public abstract class Platform {
 
         @Override
         public Version getApiVersion() {
-            String api = Sponge.getGame().getPlatform().getApiVersion();
+            String api = Sponge.getGame().getPlatform().getApi().getVersion();
             return new Version(api);
         }
 
         @Override
         public Version getImplementationVersion() {
-            String platform = Sponge.getGame().getPlatform().getVersion();
+            String platform = Sponge.getGame().getPlatform().getImplementation().getVersion();
             return new Version(platform);
         }
 
