@@ -24,17 +24,18 @@ The API:
     * For example, you can wrap plugin.isEnabled()
     * Or, you can attach an test to see if the plugin is in a broken state: Most likely from an Exception during onEnable()
     * Or, anything else your heart desires :P
-    
-     
+- **FieldTester.isInitialized(T t)**
+  * checks t for null fields.
+  * returns true is no fields are null.
+  * returns false is any fields are null.
 
-   
 Examples using VersionFactory construction:
 ---
 ```java
 public class SomePlugin extends JavaPlugin {
     
     private Version server;
-    public static final String MAX = "1.7.10-R9.9-SNAPSHOT";
+    public static final String MAX = "1.8.7-R9.9-SNAPSHOT";
     public static final String MIN = "1.2.5";
     public static final String NMS = VersionFactory.getNmsPackage();
 
@@ -71,18 +72,74 @@ public class SomePlugin extends JavaPlugin {
     }
 }
 ```
+ 
+
+The above code checks server compatibility & plugin compatibility. Checking minimum versions is perfectly fine... but you definitely have to be careful when checking for maximums. For example, using the above code is not the best way to check for server compatibility because 1.8.8 is actually compatible with 1.8.7: Instead, check that you have classes available for NMS = "v1_8_R3": Like this:
+ 
+ 
+```java
+public class VirtualPlayers extends JavaPlugin {
+
+    private static final String NMS = VersionFactory.getNmsPackage();
+
+    @Override
+    public void onEnable() {
+        if (!isServerCompatible()) {
+            Bukkit.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        // onEnable() code ...
+    }
+    
+    private boolean isServerCompatible() {
+        String className = "mc.alk.virtualplayers.nms." + NMS + ".CraftVirtualPlayer";
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException ex) {
+            getLogger().log(Level.WARNING, "VirtualPlayers is not compatible with your server.");
+            getLogger().log(Level.WARNING, "IMPLEMENTATION NOT FOUND: ");
+            getLogger().log(Level.WARNING, className);
+            return false;
+        }
+    }
+}
+  ```
+  
+  Finally, you may want to add additional checks & protections. Previously, we have only checked that the plugin is installed and that it's enabled. We can, however, additional check that the plugin is also working properly (by making sure that its fields are not null) using FieldTester.isIntialized(genericObject):
+  
+  ```java
+    public static WorldGuardInterface newInstance() {
+        WorldGuardInterface WGI = null;
+        Version<Plugin> we = VersionFactory.getPluginVersion("WorldEdit");
+        Version<Plugin> wg = VersionFactory.getPluginVersion("WorldGuard");
+        WorldGuardPlugin wgp = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
+
+        boolean wgIsInitialized = FieldTester.isInitialized(wgp);
+        if (we.isCompatible("6") && wg.isCompatible("6") && wgIsInitialized) {
+            WGI = instantiate("v6");
+        } else if (we.isCompatible("5") && we.isLessThan("6") && wg.isCompatible("5") && wg.isLessThan("6")&& wgIsInitialized) {
+            WGI = instantiate("v5");
+        } else {
+            // Not present, not compatible, or not supported.
+            System.out.println("[BattleArena] WG/WE not present, not compatible, or not supported.");
+            WGI = instantiate("v0");
+        }
+        return WGI;
+    }
+  ```
   
   
 Maven Repository:
 ---
 
-~~[http://rainbowcraft.sytes.net/maven/repository/] (http://rainbowcraft.sytes.net/maven/repository/ "Maven Repository")~~
+[http://rainbowcraft.sytes.net/maven/repository/] (http://rainbowcraft.sytes.net/maven/repository/ "Maven Repository")
 
 If you use maven, put these declarations in your pom.xml:
 
 ~~**repositories section:**~~
 
-Unfortunately, I have removed this repository. So you will have to install the project to your local ```.m2/repository```
+Check to make sure this repository is still active. If not, you will have to install the project to your local ```~/.m2/repository```
 
 ```xml
 <repository>
@@ -91,7 +148,7 @@ Unfortunately, I have removed this repository. So you will have to install the p
 </repository>
 ```
 
-**Installation to your local .m2/repository**
+**Installation to your local ~/.m2/repository**
 
 ***git latest version:***
 
@@ -140,7 +197,7 @@ I recommend using ```2.0.1``` or ```3.0.0-SNAPSHOT```
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.6</version>
+        <version>2.4.2</version>
         <executions>
             <execution>
                 <phase>package</phase>
