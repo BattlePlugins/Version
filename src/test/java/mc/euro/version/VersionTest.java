@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Unit test for simple App.
+ * Unit test for the Version object.
  */
 public class VersionTest extends TestCase
 {
