@@ -106,7 +106,8 @@
     </build>
 </project>
 <!-- If you use this module, then include the following to shade it into your final JAR:
-        <build>
+    <build>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -134,5 +135,6 @@
                     </execution>
                 </executions>
             </plugin>
-        </build>
+        </plugins>
+    </build>
 -->
