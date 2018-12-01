@@ -1,18 +1,7 @@
 package mc.euro.version.internal;
 
-import java.util.Optional;
-
-import mc.euro.version.Tester;
-import mc.euro.version.TesterFactory;
 import mc.euro.version.Version;
-import mc.euro.version.plugin.BukkitPlugin;
 import mc.euro.version.plugin.IPlugin;
-import mc.euro.version.plugin.SpongePlugin;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.common.Sponge;
 
 /**
  * Handles the construction of new Version objects specific to BUKKIT & SPONGE.
@@ -23,15 +12,9 @@ public abstract class Platform {
 
     public abstract Version<IPlugin> getPluginVersion(String pluginName);
 
-    public abstract Version getMinecraftVersion();
-
-    public abstract Version getApiVersion();
-
-    public abstract Version getImplementationVersion();
+    public abstract Version getServerVersion();
 
     public abstract String getNmsPackage();
-    
-    public abstract String name();
 
     /**
      * What Platform is currently running ?
@@ -39,72 +22,36 @@ public abstract class Platform {
      * @return Detects the Platform at runtime: BUKKIT, SPONGE, UNKNOWN_PLATFORM
      */
     public static Platform getPlatform() {
-        try {
+        try { // See if Bukkit/Spigot are loaded:
             Class.forName("org.bukkit.Bukkit");
             return Platform.BUKKIT;
         } catch (ClassNotFoundException ignored) {
+            // Bukkit/Spigot not loaded.
         }
-        try {
+        try { // See if Sponge is loaded:
             Class.forName("org.spongepowered.common.Sponge");
             return Platform.SPONGE;
         } catch (ClassNotFoundException ignored) {
+            // Sponge not loaded.
         }
-        return Platform.UNKNOWN_PLATFORM;
+        return Platform.UNKNOWN;
     }
 
     public static final Platform BUKKIT = new Platform() {
 
         @Override
         public Version<IPlugin> getPluginVersion(String pluginName) {
-            Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-            IPlugin iplugin = new BukkitPlugin(plugin);
-            Tester<IPlugin> tester = TesterFactory.getNewTester(iplugin);
-            String version = (plugin == null) ? "" : plugin.getDescription().getVersion();
-            return new Version<IPlugin>(version, tester);
+            return BukkitPlatform.getPluginVersion(pluginName);
         }
 
         @Override
-        public Version getMinecraftVersion() {
-            String version = Bukkit.getServer().getBukkitVersion();
-            return new Version(version);
-        }
-
-        @Override
-        public Version getApiVersion() {
-            String version = Bukkit.getServer().getBukkitVersion();
-            return new Version(version);
-        }
-
-        @Override
-        public Version getImplementationVersion() {
-            String version = Bukkit.getServer().getVersion();
-            return new Version(version);
+        public Version getServerVersion() {
+            return BukkitPlatform.getServerVersion();
         }
 
         @Override
         public String getNmsPackage() {
-            String NMS = null;
-            try {
-                // This fails for versions less than 1.4.5
-                NMS = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                NMS = createCompatPackage();
-            }
-            return NMS;
-        }
-
-        private String createCompatPackage() {
-            String fullVersion = Bukkit.getBukkitVersion();
-            String[] parts = fullVersion.split("[-]");
-            String version = parts[0];
-            version = version.replace(".", "_");
-            version = "v" + version;
-            return version;
-        }
-        
-        @Override
-        public String name() {
-            return "bukkit";
+            return BukkitPlatform.getNmsPackage();
         }
 
     };
@@ -113,74 +60,30 @@ public abstract class Platform {
 
         @Override
         public Version<IPlugin> getPluginVersion(String pluginName) {
-            IPlugin iplugin = new SpongePlugin(pluginName);
-            Tester<IPlugin> tester = TesterFactory.getNewTester(iplugin);
-            Optional<PluginContainer> container = Sponge.getGame().getPluginManager().getPlugin(pluginName);
-            String version = "";
-            if (container.isPresent()) {
-                version = container.get().getVersion();
-            }
-            return new Version(version, tester);
+            return SpongePlatform.getPluginVersion(pluginName);
         }
 
         @Override
-        public Version getMinecraftVersion() {
-            String minecraft = Sponge.getGame().getPlatform().getMinecraftVersion().getName();
-            return new Version(minecraft);
-        }
-
-        @Override
-        public Version getApiVersion() {
-            String api = Sponge.getGame().getPlatform().getApi().getVersion();
-            return new Version(api);
-        }
-
-        @Override
-        public Version getImplementationVersion() {
-            String platform = Sponge.getGame().getPlatform().getImplementation().getVersion();
-            return new Version(platform);
+        public Version getServerVersion() {
+            return SpongePlatform.getServerVersion();
         }
 
         @Override
         public String getNmsPackage() {
-            return createCompatPackage();
+            return SpongePlatform.getNmsPackage();
         }
-        
-        private String createCompatPackage() {
-            String version = getMinecraftVersion().toString();
-            version = version.replace(".", "_");
-            version = "v" + version;
-            return version;
+
+        public Version getApiVersion() {
+            return SpongePlatform.getApiVersion();
         }
-        
-        @Override
-        public String name() {
-            return "sponge";
+
+        public Version getImplementationVersion() {
+            return SpongePlatform.getImplementationVersion();
         }
+
     };
 
-    /**
-     * We have two options here:. <br/><br/>
-     * <pre>
-     *     1. return empty Version objects
-     *     2. throw Exceptions
-     *
-     * Throwing an Exception is "in-your-face": It's something that the user can't ignore.
-     * It signifies that either Platform.getPlatform() has failed to properly detect
-     * the currently running platform... Or it signifies that a new Platform
-     * implementation needs to be added. Furthermore, we could actually be protecting
-     * the user from accidentally using VersionFactory on an unsupported platform.
-     *
-     * I think this is better than returning empty Version objects
-     * Empty Version objects would cause version checks to fail.
-     * This is akin to failing silently.
-     * But code execution would not be interrupted.
-     * So there are pros & cons.
-     * </pre>
-     *
-     * @author Nikolai
-     */
-    public static final Platform UNKNOWN_PLATFORM = new Platform() {
+    public static final Platform UNKNOWN = new Platform() {
 
         @Override
         public Version<IPlugin> getPluginVersion(String pluginName) {
@@ -188,17 +91,7 @@ public abstract class Platform {
         }
 
         @Override
-        public Version getMinecraftVersion() {
-            throw new UnsupportedOperationException("Unknown Platform not supported.");
-        }
-
-        @Override
-        public Version getApiVersion() {
-            throw new UnsupportedOperationException("Unknown Platform not supported.");
-        }
-
-        @Override
-        public Version getImplementationVersion() {
+        public Version getServerVersion() {
             throw new UnsupportedOperationException("Unknown Platform not supported.");
         }
 
@@ -206,11 +99,7 @@ public abstract class Platform {
         public String getNmsPackage() {
             throw new UnsupportedOperationException("Unknown Platform not supported.");
         }
-        
-        @Override
-        public String name() {
-            return "unknown";
-        }
+
     };
 
 }

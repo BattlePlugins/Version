@@ -158,7 +158,6 @@ public class TesterFactory {
         for (Field field : fields) {
             field.setAccessible(true);
             try {
-                
                 if (field.get(object) == null && !field.isAnnotationPresent(Nullable.class)) {
                     nullFields.add(field.getName());
                 }

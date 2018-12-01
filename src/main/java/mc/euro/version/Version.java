@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * 
  * isSupported(): Is the installed version less than or equal to the maximum required version ? <br/><br/>
  * 
- * @author Europia79, BigTeddy98, Tux2, DSH105
+ * @author Europia79, BigTeddy98, Tux2, DSH105, Alkarinv
  */
 public class Version<T> implements Comparable<Version> {
     
@@ -26,7 +26,7 @@ public class Version<T> implements Comparable<Version> {
     String separator = "[_.-]";
     
     /**
-     * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsVersion() available for convenience. <br/>
+     * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsPackage() available for convenience. <br/>
      * @param version The version of the plugin, server, or application that is currently running in the JVM. <br/>
      */
     public Version(String version) {
@@ -35,7 +35,7 @@ public class Version<T> implements Comparable<Version> {
     }
     
     /**
-     * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsVersion() available for convenience. <br/>
+     * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsPackage() available for convenience. <br/>
      * @param version The version of the plugin, server, or application that is currently running in the JVM. <br/>
      * @param tester isCompatible() & isSupported() will ask the tester if the "plugin" isEnabled() before proceeding. <br/>
      */
@@ -44,8 +44,24 @@ public class Version<T> implements Comparable<Version> {
         this.tester = tester;
     }
     
+    /**
+     * Checks if the plugin is enabled.
+     * This method can be used to run any custom test
+     * that you previously passed to the constructor,
+     * then calls tester.test().
+     * @return True is the plugin is enabled, or false if it is disabled.
+     */
     public boolean isEnabled() {
         return tester.test();
+    }
+    
+    /**
+     * Alias for isGreaterThanOrEqualTo().
+     * @param minVersion - The absolute minimum version that's required to achieve compatibility.
+     * @return Return true, if the currently running/installed version is greater than or equal to minVersion.
+     */
+    public boolean isCompatible(Version minVersion) {
+        return isCompatible(minVersion.toString());
     }
     
     /**
@@ -62,8 +78,26 @@ public class Version<T> implements Comparable<Version> {
      * @param maxVersion - The absolute maximum version that's supported.
      * @return Return true, if the currently running/installed version is less than or equal to maxVersion.
      */
+    public boolean isSupported(Version maxVersion) {
+        return isSupported(maxVersion.toString());
+    }
+    
+    /**
+     * Alias for isLessThanOrEqualTo().
+     * @param maxVersion - The absolute maximum version that's supported.
+     * @return Return true, if the currently running/installed version is less than or equal to maxVersion.
+     */
     public boolean isSupported(String maxVersion) {
         return isLessThanOrEqualTo(maxVersion);
+    }
+    
+    /**
+     * Unlike isCompatible(), this method returns false if the versions are equal.
+     * @param whichVersion
+     * @return Return true, if the currently running/installed version is greater than whichVersion.
+     */
+    public boolean isGreaterThan(Version whichVersion) {
+        return isGreaterThan(whichVersion.toString());
     }
     
     /**
@@ -85,6 +119,15 @@ public class Version<T> implements Comparable<Version> {
      * @param minVersion
      * @return Return true, if this version object is greater than or equal to the parameter, minVersion.
      */
+    public boolean isGreaterThanOrEqualTo(Version minVersion) {
+        return isGreaterThanOrEqualTo(minVersion.toString());
+    }
+    
+    /**
+     * Alias for isCompatible().
+     * @param minVersion
+     * @return Return true, if this version object is greater than or equal to the parameter, minVersion.
+     */
     public boolean isGreaterThanOrEqualTo(String minVersion) {
         if (!this.isEnabled()) return false;
         int x = compareTo(new Version(minVersion));
@@ -92,6 +135,15 @@ public class Version<T> implements Comparable<Version> {
             return true;
         } 
         return false;
+    }
+    
+    /**
+     * Unlike isSupported(), this method returns false if the versions are equal.
+     * @param whichVersion
+     * @return Return true, if the currently running/installed version is less than whichVersion.
+     */
+    public boolean isLessThan(Version whichVersion) {
+        return isLessThan(whichVersion.toString());
     }
     
     /**
@@ -113,6 +165,15 @@ public class Version<T> implements Comparable<Version> {
      * @param maxVersion
      * @return Return true, if this version object is less than or equal to the parameter, maxVersion.
      */
+    public boolean isLessThanOrEqualTo(Version maxVersion) {
+        return isLessThanOrEqualTo(maxVersion.toString());
+    }
+    
+    /**
+     * Alias for isSupported().
+     * @param maxVersion
+     * @return Return true, if this version object is less than or equal to the parameter, maxVersion.
+     */
     public boolean isLessThanOrEqualTo(String maxVersion) {
         if (!this.isEnabled()) return false;
         int x = compareTo(new Version(maxVersion));
@@ -124,17 +185,25 @@ public class Version<T> implements Comparable<Version> {
     
     /**
      * Returns Negative, Zero, or Positive if this version is less than, equal to, or greater than the parameter.
+     * Unlike isCompatible() & isSupported(): THIS METHOD DOES NOT CHECK IF THE PLUGIN IS ENABLED.
+     * @param whichVersion
+     * @return Negative, Zero, or Positive as this object is less than, equal to, or greater than the parameter.
+     */
+    @Override
+    public int compareTo(Version whichVersion) {
+        return compareTo(whichVersion.toString());
+    }
+    
+    /**
+     * Returns Negative, Zero, or Positive if this version is less than, equal to, or greater than the parameter.
+     * Unlike isCompatible() and isSupported(),
+     * THIS METHOD DOES NOT CHECK IF THE PLUGIN IS ENABLED.
      * @param whichVersion
      * @return Negative, Zero, or Positive as this object is less than, equal to, or greater than the parameter.
      */
     public int compareTo(String whichVersion) {
-        return compareTo(new Version(whichVersion));
-    }
-    
-    @Override
-    public int compareTo(Version whichVersion) {
         int[] currentVersion = parseVersion(this.version);
-        int[] otherVersion = parseVersion(whichVersion.toString());
+        int[] otherVersion = parseVersion(whichVersion);
         int length = (currentVersion.length >= otherVersion.length) ? currentVersion.length : otherVersion.length;
         for (int index = 0; index < length; index = index + 1) {
             int self = (index < currentVersion.length) ? currentVersion[index] : 0;
@@ -167,6 +236,10 @@ public class Version<T> implements Comparable<Version> {
         return temp;
     }
     
+    /**
+     * The default regex separator is "[_.-]".
+     * Which separates by underscores, periods, & dashes.
+     */
     public Version setSeparator(String regex) {
         this.separator = regex;
         return this;
@@ -201,9 +274,12 @@ public class Version<T> implements Comparable<Version> {
         return new Version(dev);
     }
     
+    /**
+     * This is the exact, un-altered String that was passed to the constructor.
+     * @return The String representation, or an empty String if null.
+     */
     @Override
     public String toString() {
-        String v = (this.version == null) ? "" : this.version;
-        return v;
+        return (this.version == null) ? "" : this.version;
     }
 }

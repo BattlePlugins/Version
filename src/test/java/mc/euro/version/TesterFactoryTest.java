@@ -61,7 +61,7 @@ public class TesterFactoryTest extends TestCase {
         expected = !true;
         Assert.assertEquals(expected, actual);
         
-        p = TesterFactory.getFieldTester(cat);
+        p = TesterFactory.<Animal>getFieldTester(cat);
         actual = p.test(cat);
         expected = !false;
         Assert.assertEquals(expected, actual);
@@ -76,7 +76,7 @@ public class TesterFactoryTest extends TestCase {
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        p = TesterFactory.getFieldTester(mouse);
+        p = TesterFactory.<Animal>getFieldTester(mouse);
         actual = p.test(mouse);
         expected = !false;
         Assert.assertEquals(expected, actual);

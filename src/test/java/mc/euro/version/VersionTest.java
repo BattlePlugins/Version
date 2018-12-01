@@ -142,8 +142,25 @@ public class VersionTest extends TestCase
         assertEquals(expected, result);
     }
     
-
-
+    /**
+     * Caused a failure for mc.alk.plugin.updater.Version class.
+     */
+    public void testIsGreaterThan() {        
+        Version instance = new Version("v1_11_R1");
+        Version whichVersion = new Version("v1_6_R1");
+        boolean result = instance.isGreaterThan(whichVersion.toString());
+        boolean expected = true;
+        assertEquals(expected, result);
+    }
+    
+    public void testIsLessThan() {        
+        Version instance = new Version("v1_6_R1");
+        Version whichVersion = new Version("v1_11_R1");
+        boolean result = instance.isLessThan(whichVersion.toString());
+        boolean expected = true;
+        assertEquals(expected, result);
+    }
+    
     public void testSetSeparator() throws NoSuchFieldException {
         System.out.println("setSeparator");
         String expected = "[,]";
