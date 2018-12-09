@@ -41,7 +41,7 @@ public class SomePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        server = VersionFactory.getMinecraftVersion();
+        server = VersionFactory.getServerVersion();
         if (!server.isSupported(MAX) || !server.isCompatible(MIN)) {
             getLogger().info("This plugin is not compatible with your server.");
             getLogger().info("The maximum supported version is " + MAX);
@@ -178,13 +178,13 @@ Check to make sure this repository is still active. If not, you will have to ins
 
 **dependencies section:**
 
-I recommend using ```2.0.1``` or ```3.0.0-SNAPSHOT```
+I recommend using ```2.0.1``` or ```4.0.1```
 
 ```xml
 <dependency>
     <groupId>mc.euro</groupId>
     <artifactId>Version</artifactId>
-    <version>2.0.1</version>
+    <version>4.0.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -197,7 +197,7 @@ I recommend using ```2.0.1``` or ```3.0.0-SNAPSHOT```
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.4.2</version>
+        <version>3.2.1</version>
         <executions>
             <execution>
                 <phase>package</phase>
