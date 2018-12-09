@@ -17,14 +17,14 @@ import org.spongepowered.common.Sponge;
 public abstract class SpongePlatform {
 
     public static Version<IPlugin> getPluginVersion(String pluginName) {
-        IPlugin iplugin = new SpongePlugin(pluginName);
-        Tester<IPlugin> tester = TesterFactory.getNewTester(iplugin);
         Optional<PluginContainer> container = Sponge.getGame().getPluginManager().getPlugin(pluginName);
+        IPlugin iplugin = null;
         String version = "";
         if (container.isPresent()) {
             version = container.get().getVersion();
+            iplugin = new SpongePlugin(pluginName);
         }
-        return new Version(version, tester);
+        return new Version(version, TesterFactory.getNewTester(iplugin));
     }
 
     public static Version getServerVersion() {

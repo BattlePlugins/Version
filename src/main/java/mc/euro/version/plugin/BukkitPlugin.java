@@ -16,7 +16,7 @@ public class BukkitPlugin extends IPlugin {
 
     @Override
     public boolean isEnabled() {
-        return this.plugin.isEnabled();
+        return (plugin != null) && (plugin.isEnabled());
     }
 
 }

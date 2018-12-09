@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>mc.euro</groupId>
     <artifactId>Version</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <repositories>
         <repository>
@@ -62,19 +62,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <distributionManagement>
-        <repository>
-            <id>rainbowcraft-repo</id>
-            <url>scp://rainbowcraft.sytes.net/var/www/maven/repository</url>
-        </repository>
-    </distributionManagement>
     <build>
         <finalName>Version</finalName>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>2.10</version>
+                <version>3.2.0</version>
             </extension>
         </extensions>
         <defaultGoal>package</defaultGoal>
@@ -96,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -104,6 +98,12 @@
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>rainbowcraft-repo</id>
+            <url>scp://rainbowcraft.sytes.net/var/www/maven/repository</url>
+        </repository>
+    </distributionManagement>
 </project>
 <!-- If you use this module, then include the following to shade it into your final JAR:
     <build>
@@ -111,7 +111,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.2</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

@@ -17,10 +17,10 @@ public abstract class BukkitPlatform {
 
     public static Version<IPlugin> getPluginVersion(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-        IPlugin iplugin = new BukkitPlugin(plugin);
+        IPlugin iplugin = (plugin == null) ? null : new BukkitPlugin(plugin);
         Tester<IPlugin> tester = TesterFactory.getNewTester(iplugin);
         String version = (plugin == null) ? "" : plugin.getDescription().getVersion();
-        return new Version<IPlugin>(version, tester);
+        return new Version<>(version, tester);
     }
 
     public static Version getServerVersion() {

@@ -79,19 +79,7 @@ public class TesterFactory {
             @Override
             public boolean test(T testee) {
                 if (testee == null) return false;
-                Class klass = testee.getClass();
-                String cname = klass.getCanonicalName();
-                String sname = klass.getSimpleName();
-                // Logger.getLogger(cname).info("[TEST]" + cname);
-                Collection<String> nullFields = getNullFields(klass, testee);
-                if (!nullFields.isEmpty()) {
-                    String failure = TesterFactory.toString(nullFields).insert(0, sname).toString();
-                    // Logger.getLogger(cname).severe(failure);
-                    return false;
-                }
-                String success = sname + " is fully initialized";
-                // Logger.getLogger(cname).info(success);
-                return true;
+                return isInitialized(testee.getClass(), testee);
             }
         };
     }
@@ -125,24 +113,29 @@ public class TesterFactory {
             public boolean test(T testee) {
                 if (testee == null) return false;
                 Class klass = testee.getClass();
-                String cname = klass.getCanonicalName();
-                String sname = klass.getSimpleName();
-                // Logger.getLogger(cname).info("[TEST]" + cname);
-                Collection<String> nullFields = new ArrayList<String>();
                 while (klass != null) {
-                    nullFields.addAll(getNullFields(klass, testee));
+                    if (hasNullFields(klass, testee)) return false;
                     klass = klass.getSuperclass();
                 }
-                if (!nullFields.isEmpty()) {
-                    String failure = TesterFactory.toString(nullFields).insert(0, sname).toString();
-                    // Logger.getLogger(cname).severe(failure);
-                    return false;
-                }
-                String success = sname + " is fully initialized";
-                // Logger.getLogger(cname).log(Level.INFO, success);
                 return true;
             }
         };
+    }
+    
+    /**
+     * @return -- true if all fields are initialized (not null), false if any field is null.
+     * @since v4.0.1
+     */
+    private static <T> boolean isInitialized(Class c, T object) {
+        return !hasNullFields(c, object);
+    }
+    
+    /**
+     * @return -- true if all fields are initialized (not null), false if any field is null.
+     * @since v4.0.1
+     */
+    private static <T> boolean hasNullFields(Class c, T object) {
+        return !getNullFields(c, object).isEmpty();
     }
     
     /**
@@ -151,7 +144,7 @@ public class TesterFactory {
      * @since v3.0.0-SNAPSHOT
      */
     private static <T> Collection<String> getNullFields(Class c, T object) {
-        Collection<String> nullFields = new ArrayList<String>();
+        Collection<String> nullFields = new ArrayList<>();
         if (object == null) return nullFields;
         String name = c.getName();
         Field[] fields = c.getDeclaredFields();
@@ -160,10 +153,9 @@ public class TesterFactory {
             try {
                 if (field.get(object) == null && !field.isAnnotationPresent(Nullable.class)) {
                     nullFields.add(field.getName());
+                    return nullFields;
                 }
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(name).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(name).log(Level.SEVERE, null, ex);
             }
         }
