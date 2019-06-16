@@ -12,8 +12,8 @@
     </properties>
     <repositories>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <id>battelplugins-repo</id>
+            <url>https://artifactory.battleplugins.org/artifactory/libs-release</url>
         </repository>
         <repository>
             <id>sponge-maven-repo</id>
