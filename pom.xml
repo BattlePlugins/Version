@@ -12,8 +12,8 @@
     </properties>
     <repositories>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <id>battelplugins-repo</id>
+            <url>https://artifactory.battleplugins.org/artifactory/libs-release</url>
         </repository>
         <repository>
             <id>sponge-maven-repo</id>
@@ -100,9 +100,15 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>rainbowcraft-repo</id>
-            <url>scp://rainbowcraft.sytes.net/var/www/maven/repository</url>
+            <id>central</id>
+            <name>BattlePlugins Artifactory Server-releases</name>
+            <url>https://artifactory.battleplugins.org/artifactory/libs-release-local</url>
         </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>BattlePlugins Artifactory Server-snapshots</name>
+            <url>https://artifactory.battleplugins.org/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>
 <!-- If you use this module, then include the following to shade it into your final JAR:
