@@ -6,9 +6,9 @@ import org.spongepowered.api.Sponge;
  *
  * @author Nikolai
  */
-public class SpongePlugin extends IPlugin {
+public class SpongePlugin implements IPlugin {
 
-    String name;
+    private String name;
 
     public SpongePlugin(String name) {
         this.name = name;

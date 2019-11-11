@@ -29,10 +29,16 @@ public abstract class Platform {
             // Bukkit/Spigot not loaded.
         }
         try { // See if Sponge is loaded:
-            Class.forName("org.spongepowered.common.Sponge");
+            Class.forName("org.spongepowered.api.Sponge");
             return Platform.SPONGE;
         } catch (ClassNotFoundException ignored) {
             // Sponge not loaded.
+        }
+        try { // See if Nukkit is loaded:
+            Class.forName("cn.nukkit.Nukkit");
+            return Platform.NUKKIT;
+        } catch (ClassNotFoundException ignored) {
+            // Nukkit not loaded.
         }
         return Platform.UNKNOWN;
     }

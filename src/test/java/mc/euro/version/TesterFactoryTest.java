@@ -51,42 +51,42 @@ public class TesterFactoryTest extends TestCase {
     }
     
     public void testGetFieldTester() {
-        Predicate<Animal> p = TesterFactory.getFieldTester(animal);
+        Predicate<Animal> p = TesterFactory.getFieldTester();
         boolean actual = p.test(animal);
         boolean expected = !true;
         Assert.assertEquals(expected, actual);
         
-        Predicate p2 = TesterFactory.getFieldTester(animal);
+        Predicate<Animal> p2 = TesterFactory.getFieldTester();
         actual = p2.test(animal);
         expected = !true;
         Assert.assertEquals(expected, actual);
         
-        p = TesterFactory.<Animal>getFieldTester(cat);
+        p = TesterFactory.getFieldTester();
         actual = p.test(cat);
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        p2 = TesterFactory.getFieldTester(cat);
+        p2 = TesterFactory.getFieldTester();
         actual = p2.test(cat);
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        Predicate<Cat> c = TesterFactory.getFieldTester(cat);
+        Predicate<Cat> c = TesterFactory.getFieldTester();
         actual = c.test(cat);
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        p = TesterFactory.<Animal>getFieldTester(mouse);
+        p = TesterFactory.getFieldTester();
         actual = p.test(mouse);
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        p2 = TesterFactory.getFieldTester(mouse);
+        p2 = TesterFactory.getFieldTester();
         actual = p2.test(mouse);
         expected = !false;
         Assert.assertEquals(expected, actual);
         
-        Predicate<Mouse> m = TesterFactory.getFieldTester(mouse);
+        Predicate<Mouse> m = TesterFactory.getFieldTester();
         actual = m.test(mouse);
         expected = !false;
         Assert.assertEquals(expected, actual);

@@ -6,7 +6,7 @@ import cn.nukkit.plugin.Plugin;
  *
  * @author Redned
  */
-public class NukkitPlugin extends IPlugin {
+public class NukkitPlugin implements IPlugin {
 
     private Plugin plugin;
 

@@ -6,9 +6,9 @@ import org.bukkit.plugin.Plugin;
  * 
  * @author Nikolai
  */
-public class BukkitPlugin extends IPlugin {
+public class BukkitPlugin implements IPlugin {
     
-    Plugin plugin;
+    private Plugin plugin;
     
     public BukkitPlugin(Plugin plugin) {
         this.plugin = plugin;

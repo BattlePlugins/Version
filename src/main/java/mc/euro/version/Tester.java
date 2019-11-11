@@ -13,8 +13,8 @@ package mc.euro.version;
  */
 public class Tester<T> {
 
-    Predicate<T> predicate;
-    T object;
+    private Predicate<T> predicate;
+    private T object;
 
     public Tester(Predicate<T> tester, T testee) {
         this.predicate = tester;

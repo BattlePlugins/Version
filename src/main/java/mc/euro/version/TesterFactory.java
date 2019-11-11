@@ -21,20 +21,11 @@ public class TesterFactory {
      * Creates a new Tester object of Type IPlugin that checks if the IPlugin.isEnabled().
      */
     public static Tester<IPlugin> getNewTester(IPlugin iplugin) {
-
         if (iplugin == null) {
             return getShortCircuitTester();
         }
         
-        Predicate predicate = new Predicate<IPlugin>() {
-
-            @Override
-            public boolean test(IPlugin t) {
-                return t.isEnabled();
-            }
-        };
-
-        return new Tester(predicate, iplugin);
+        return new Tester<>(IPlugin::isEnabled, iplugin);
     }
 
     /**
@@ -43,7 +34,7 @@ public class TesterFactory {
      * @return A new Tester object where its test() method always returns true.
      */
     public static Tester getDefaultTester() {
-        return new Tester(Predicate.TRUE, null);
+        return new Tester<>(Predicate.TRUE, null);
     }
     
     /**
@@ -52,7 +43,7 @@ public class TesterFactory {
      * @return A new Tester object where its test() method always returns false;
      */
     public static Tester getShortCircuitTester() {
-        return new Tester(Predicate.FALSE, null);
+        return new Tester<>(Predicate.FALSE, null);
     }
     
     /**
@@ -69,18 +60,15 @@ public class TesterFactory {
      * @since v3.0.0-SNAPSHOT
      */
     public static <T> Tester<T> getUnitTester(T t) {
-        return new Tester(getFieldTester(t), t);
+        return new Tester<>(getFieldTester(), t);
     }
-    
-    public static <T> Predicate<T> getFieldTester(T t) {
-        
-        return new Predicate<T>() {
 
-            @Override
-            public boolean test(T testee) {
-                if (testee == null) return false;
-                return isInitialized(testee.getClass(), testee);
-            }
+    public static <T> Predicate<T> getFieldTester() {
+        return testee -> {
+            if (testee == null)
+                return false;
+
+            return isInitialized(testee.getClass(), testee);
         };
     }
     
@@ -93,7 +81,7 @@ public class TesterFactory {
      * @since v3.0.0-SNAPSHOT
      */
     public static <T> Tester<T> getInheritanceTester(T t) {
-        return new Tester<T>(getSuperFieldTester(t), t);
+        return new Tester<>(getSuperFieldTester(t), t);
     }
     
     /**
@@ -106,19 +94,17 @@ public class TesterFactory {
      * @since v3.0.0-SNAPSHOT
      */
     public static <T> Predicate<T> getSuperFieldTester(T t) {
-        
-        return new Predicate<T>() {
+        return testee -> {
+            if (testee == null)
+                return false;
 
-            @Override
-            public boolean test(T testee) {
-                if (testee == null) return false;
-                Class klass = testee.getClass();
-                while (klass != null) {
-                    if (hasNullFields(klass, testee)) return false;
-                    klass = klass.getSuperclass();
-                }
-                return true;
+            Class<?> clazz = testee.getClass();
+            while (clazz != null) {
+                if (hasNullFields(clazz, testee))
+                    return false;
+                clazz = clazz.getSuperclass();
             }
+            return true;
         };
     }
     

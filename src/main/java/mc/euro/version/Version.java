@@ -21,9 +21,9 @@ public class Version<T> implements Comparable<Version> {
      * 
      * Because, if the plugin is disabled, then our compatibility check should fail.
      */
-    final Tester<T> tester;
-    final String version;
-    String separator = "[_.-]";
+    private final Tester<T> tester;
+    private final String version;
+    private String separator = "[_.-]";
     
     /**
      * VersionFactory methods getPluginVersion(), getServerVersion(), getNmsPackage() available for convenience. <br/>
@@ -204,7 +204,7 @@ public class Version<T> implements Comparable<Version> {
     public int compareTo(String whichVersion) {
         int[] currentVersion = parseVersion(this.version);
         int[] otherVersion = parseVersion(whichVersion);
-        int length = (currentVersion.length >= otherVersion.length) ? currentVersion.length : otherVersion.length;
+        int length = Math.max(currentVersion.length, otherVersion.length);
         for (int index = 0; index < length; index = index + 1) {
             int self = (index < currentVersion.length) ? currentVersion[index] : 0;
             int other = (index < otherVersion.length) ? otherVersion[index] : 0;

@@ -8,28 +8,15 @@ package mc.euro.version;
  */
 public interface Predicate<T> {
     
-    public boolean test(T t);
+    boolean test(T t);
     
     /**
      * Always returns true.
      */
-    public static final Predicate TRUE = new Predicate() {
-
-        @Override
-        public boolean test(Object t) {
-            return true;
-        }
-    };
+    Predicate<?> TRUE = t -> true;
     
     /**
      * Always returns false.
      */
-    public static final Predicate FALSE = new Predicate() {
-
-        @Override
-        public boolean test(Object t) {
-            return false;
-        }
-    };
-
+    Predicate<?> FALSE = t -> false;
 }

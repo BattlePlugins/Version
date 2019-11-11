@@ -29,7 +29,7 @@ public abstract class BukkitPlatform {
     }
 
     public static String getNmsPackage() {
-        String NMS = null;
+        String NMS;
         try {
             // This fails for versions less than 1.4.5
             NMS = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];

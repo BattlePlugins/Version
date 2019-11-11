@@ -14,7 +14,7 @@ public class FieldTester {
      * @since v3.0.0-SNAPSHOT
      */
     public static <T> boolean isInitialized(T t) {
-        return TesterFactory.<T>getUnitTester(t).test();
+        return TesterFactory.getUnitTester(t).test();
     }
 
     /**
@@ -25,7 +25,7 @@ public class FieldTester {
      * @since v3.0.0-SNAPSHOT
      */
     public static <T> boolean isFullyInitialized(T t) {
-        return TesterFactory.<T>getInheritanceTester(t).test();
+        return TesterFactory.getInheritanceTester(t).test();
     }
 
 }

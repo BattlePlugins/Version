@@ -9,8 +9,8 @@ package mc.euro.version.plugin;
  * 
  * @author Nikolai
  */
-public abstract class IPlugin {
+public interface IPlugin {
     
-    public abstract boolean isEnabled();
+    boolean isEnabled();
 
 }

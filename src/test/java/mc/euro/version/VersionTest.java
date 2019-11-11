@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
