@@ -1,13 +1,14 @@
 package mc.euro.version.internal;
 
 import java.util.Optional;
-import mc.euro.version.Tester;
 import mc.euro.version.TesterFactory;
 import mc.euro.version.Version;
 import mc.euro.version.plugin.IPlugin;
 import mc.euro.version.plugin.SpongePlugin;
+
+import org.spongepowered.api.Platform;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.common.Sponge;
 
 /**
  * Powers Platform.SPONGE & hides the Sponge imports from the Platform class.
@@ -21,10 +22,11 @@ public abstract class SpongePlatform {
         IPlugin iplugin = null;
         String version = "";
         if (container.isPresent()) {
-            version = container.get().getVersion();
+            version = container.get().getVersion().orElse("");
+
             iplugin = new SpongePlugin(pluginName);
         }
-        return new Version(version, TesterFactory.getNewTester(iplugin));
+        return new Version<>(version, TesterFactory.getNewTester(iplugin));
     }
 
     public static Version getServerVersion() {
@@ -44,12 +46,12 @@ public abstract class SpongePlatform {
     }
 
     public static Version getApiVersion() {
-        String api = Sponge.getGame().getPlatform().getApi().getVersion();
+        String api = Sponge.getGame().getPlatform().getContainer(Platform.Component.API).getVersion().orElse("");
         return new Version(api);
     }
 
     public static Version getImplementationVersion() {
-        String platform = Sponge.getGame().getPlatform().getImplementation().getVersion();
+        String platform = Sponge.getGame().getPlatform().getContainer(Platform.Component.IMPLEMENTATION).getVersion().orElse("");
         return new Version(platform);
     }
 

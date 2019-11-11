@@ -83,6 +83,33 @@ public abstract class Platform {
 
     };
 
+    public static final Platform NUKKIT = new Platform() {
+
+        @Override
+        public Version<IPlugin> getPluginVersion(String pluginName) {
+            return NukkitPlatform.getPluginVersion(pluginName);
+        }
+
+        @Override
+        public Version getServerVersion() {
+            return NukkitPlatform.getServerVersion();
+        }
+
+        /**
+         * Note: Since Nukkit does not have NMS,
+         * the package of the 'server' module in Nukkit
+         * is returned instead.
+         */
+        @Override
+        public String getNmsPackage() {
+            return NukkitPlatform.getServerPackage();
+        }
+
+        public Version getApiVersion() {
+            return NukkitPlatform.getApiVersion();
+        }
+    };
+
     public static final Platform UNKNOWN = new Platform() {
 
         @Override

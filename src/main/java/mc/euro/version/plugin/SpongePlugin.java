@@ -1,6 +1,6 @@
 package mc.euro.version.plugin;
 
-import org.spongepowered.common.Sponge;
+import org.spongepowered.api.Sponge;
 
 /**
  *
